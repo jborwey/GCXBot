@@ -18,15 +18,31 @@ def authenticate():
 
 def run_subwaybot(reddit):
 
-    print("Getting 20 posts...\n")
+    print("Getting 30 posts...\n")
 
     subreddit = reddit.subreddit('giftcardexchange')
     for submission in subreddit.new(limit=30):
-        match = re.findall("Amazon", submission.title)
+        match = re.findall("Subway", submission.title)
         if match:
             print('Match found in submission: ' + submission.title)
 
+            file_obj_r = open(path, 'r')
+
+            if submission.id not in file_obj_r.read().splitlines():
+                print('Submission is unique, saving for future reference')
+
+                file_obj_r.close()
+
+                file_obj_w = open(path, 'a+')
+                file_obj_w.write(submission.id + '\n')
+                file_obj_w.close()
+            else:
+                    print('Already visited link...no reply needed\n')
+
         time.sleep(10)
+
+    print('Waiting 60 seconds...\n')
+    time.sleep(60)
 
 
 def main():
